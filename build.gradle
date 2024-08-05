@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.todobackend'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+jar {
+    enabled = false
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone'}
+    maven { url 'https://repo.spring.io/snapshot'}
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '32.1.2-jre'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
+            'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //스프링 시큐리티 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-oauth2-client
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// release 태스크 작업
+task("release") {
+
+    dependsOn("build")
+
+    doLast {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            /* $ eb setenv SPRING_PROFILES_ACTIVE=prod */
+            commandLine 'eb', 'setenv', 'SPRING_PROFILES_ACTIVE=prod'
+            standardOutput = stdout
+        }
+        /* 결과 로깅을 위한 작업 */
+        println "eb setnev SPRING_PROFILES_ACTIVE=prod :\n$stdout";
+        exec {
+            /* eb deploy => .elasticbeanstalk/config.yml에 있는 설정으로 배포 처리. */
+            commandLine 'eb', 'deploy'
+            standardOutput = stdout
+        }
+        println "eb deploy :\n$stdout";
+        println "Release succeeded.";
+    }
+
+}

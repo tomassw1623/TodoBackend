@@ -1,0 +1,14 @@
+# 개발용
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate.ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+  
+  # DataSource
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.56.1:3306/todos?useUnicode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: todoAdmin
+    password: todoAdmin
