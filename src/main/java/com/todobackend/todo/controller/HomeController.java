@@ -9,6 +9,6 @@ public class HomeController {
     //for healthCheck
     @RequestMapping("/")
     public String home(){
-        return "The Server is up and running.... ";
+        return "The Server is up and running.... after codepipeline";
     }
 }

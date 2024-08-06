@@ -64,14 +64,14 @@ task("release") {
         def stdout = new ByteArrayOutputStream()
         exec {
             /* $ eb setenv SPRING_PROFILES_ACTIVE=prod */
-            commandLine 'eb', 'setenv', 'SPRING_PROFILES_ACTIVE=prod'
+            commandLine '/home/user1/.ebcli-virtual-env/executables/eb', 'setenv', 'SPRING_PROFILES_ACTIVE=prod'
             standardOutput = stdout
         }
         /* 결과 로깅을 위한 작업 */
         println "eb setnev SPRING_PROFILES_ACTIVE=prod :\n$stdout";
         exec {
             /* eb deploy => .elasticbeanstalk/config.yml에 있는 설정으로 배포 처리. */
-            commandLine 'eb', 'deploy'
+            commandLine '/home/user1/.ebcli-virtual-env/executables/eb', 'deploy'
             standardOutput = stdout
         }
         println "eb deploy :\n$stdout";
